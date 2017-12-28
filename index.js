@@ -59,7 +59,7 @@ class Pidify {
       };
       fs.writeFile(this.pidfilePath, JSON.stringify(j, null, 2), err => {
         if (!err) {
-          accept(j);
+          accept(cp);
         } else {
           reject(err);
         }
