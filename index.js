@@ -58,6 +58,8 @@ class Pidify {
         opts,
       };
       fs.writeFile(this.pidfilePath, JSON.stringify(j, null, 2), err => {
+        cp.removeListener('error', reject);
+
         if (!err) {
           accept(cp);
         } else {
