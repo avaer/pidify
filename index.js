@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const childProcess = require('child_process');
 
+const mkdirp = require('mkdirp');
 const findProcess = require('find-process');
 
 class Pidify {
@@ -57,11 +58,17 @@ class Pidify {
         args,
         opts,
       };
-      fs.writeFile(this.pidfilePath, JSON.stringify(j, null, 2), err => {
-        cp.removeListener('error', reject);
-
+      mkdirp(path.dirname(this.pidfilePath), err => {
         if (!err) {
-          accept(cp);
+          fs.writeFile(this.pidfilePath, JSON.stringify(j, null, 2), err => {
+            cp.removeListener('error', reject);
+
+            if (!err) {
+              accept(cp);
+            } else {
+              reject(err);
+            }
+          });
         } else {
           reject(err);
         }
