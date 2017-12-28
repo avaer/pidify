@@ -18,9 +18,7 @@ class Pidify {
             const {pid, file, args, opts} = j;
             findProcess('pid', pid)
               .then(list => {
-                const cmd = [file].concat(args).join(' ');
-
-                if (list.some(l => l.cmd === cmd)) {
+                if (list.some(l => l.name === file)) {
                   accept({pid, file, args, opts});
                 } else {
                   accept(null);
