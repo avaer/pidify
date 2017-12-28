@@ -49,6 +49,13 @@ class Pidify {
   spawn(file, args, opts) {
     return new Promise((accept, reject) => {
       const cp = childProcess.spawn(file, args, opts);
+      const events = [];
+      cp.on('exit', (code, signal) => {
+        events.push(['exit', code, signal]);
+      });
+      cp.on('close', (code, signal) => {
+        events.push(['close', code, signal]);
+      });
       cp.on('error', reject);
 
       const {pid} = cp;
@@ -67,6 +74,9 @@ class Pidify {
               accept(cp);
             } else {
               reject(err);
+            }
+            for (let i = 0; i < events.length; i++) {
+              cp.emit.apply(cp, events[i]);
             }
           });
         } else {
