@@ -1,3 +1,4 @@
+const path = require('path');
 const fs = require('fs');
 const childProcess = require('child_process');
 
@@ -18,7 +19,9 @@ class Pidify {
             const {pid, file, args, opts} = j;
             findProcess('pid', pid)
               .then(list => {
-                if (list.some(l => l.name === file)) {
+                const basename = path.basename(file);
+
+                if (list.some(l => l.name === basename)) {
                   accept({pid, file, args, opts});
                 } else {
                   accept(null);
