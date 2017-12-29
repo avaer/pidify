@@ -71,37 +71,6 @@ class Pidify {
             cp.removeListener('error', reject);
 
             if (!err) {
-              cp.updatePidfile = updateSpec => {
-                return new Promise((accept, reject) => {
-                  fs.readFile(this.pidfilePath, 'utf8', (err, s) => {
-                    if (!err) {
-                      let j = _jsonParse(s);
-
-                      if (j !== null) {
-                        accept(j);
-                      } else {
-                        reject(new Error('failed to parse old pidfile: ' + JSON.stringify(s)));
-                      }
-                    } else {
-                      reject(err);
-                    }
-                  });
-                })
-                  .then(j => new Promise((accept, reject) => {
-                    for (const k in updateSpec) {
-                      j[k] = updateSpec[k];
-                    }
-
-                    fs.writeFile(this.pidfilePath, JSON.stringify(j, null, 2), err => {
-                      if (!err) {
-                        accept();
-                      } else {
-                        reject(err);
-                      }
-                    });
-                  }));
-              };
-
               accept(cp);
             } else {
               reject(err);
